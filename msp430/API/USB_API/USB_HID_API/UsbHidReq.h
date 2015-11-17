@@ -29,40 +29,57 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
-
-/*
- * The function _system_pre_init it called by the start-up code before
- * "main" is called, and before data segment initialization is
- * performed.
- *
- * This is a template file, modify to perform any initialization that
- * should take place early.
- *
- * The return value of this function controls if data segment
- * initialization should take place. If 0 is returned, it is bypassed.
- *
- * For the MSP430 microcontroller family, please consider disabling
- * the watchdog timer here, as it could time-out during the data
- * segment initialization.
+/* 
+ * ======== UsbHidReq.h ========
  */
 
-#include "msp430.h"
 #include <stdint.h>
 
-int16_t _system_pre_init(void)
-{
-  /* Insert your low-level initializations here */
+#ifndef _UsbHidReq_H_
+#define _UsbHidReq_H_
 
-  /* Disable Watchdog timer to prevent reset during */
-  /* long variable initialization sequences. */
-  WDTCTL = WDTPW | WDTHOLD;   
-  
-  /*==================================*/
-  /* Choose if segment initialization */
-  /* should be done or not.           */
-  /* Return: 0 to omit initialization */
-  /* 1 to run initialization          */
-  /*==================================*/
-  return 1;
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+
+/**
+ * Return Hid descriptor to host over control endpoint
+ */
+uint8_t usbGetHidDescriptor(void);
+/**
+ * Return HID report descriptor to host over control endpoint
+ */
+uint8_t usbGetReportDescriptor(void);
+/**
+ * Receive Set_Report from host over control endpoint
+ */
+uint8_t usbSetReport(void);
+/**
+ * Process Get_Report request from host over control endpoint
+ */
+uint8_t usbGetReport(void);
+/**
+ * Receive Set_Idle from host over control endpoint
+ */
+uint8_t usbSetIdle(void);
+/**
+ * Process Get_Idle request from host over control endpoint
+ */
+uint8_t usbGetIdle(void);
+/**
+ * Receive Set_Protocol from host over control endpoint
+ */
+uint8_t usbSetProtocol(void);
+/**
+ * Process Get_Protocol request from host over control endpoint
+ */
+uint8_t usbGetProtocol(void);
+
+
+#ifdef __cplusplus
 }
+#endif
+#endif  //_UsbHidReq_H_
 //Released_Version_5_00_01
