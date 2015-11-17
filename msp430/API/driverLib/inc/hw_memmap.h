@@ -46,7 +46,6 @@
 #include "../deprecated/CCS/msp430f5xx_6xxgeneric.h"
 #else
 #include <msp430xgeneric.h>
-#include <msp430f5510.h>
 #endif
 
 #include "stdint.h"

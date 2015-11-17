@@ -2,26 +2,25 @@
 NAME            = ti-leaf-api
 CPU             = msp430f5510
 LIB             = lib
-INC             = -Iinc -I/home/jack/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.5/include$
+INC             = -Iinc -I/usr/ti/msp430/include -I../  
 OBJ             = obj
 SRC             = $(wildcard *.c)
 SRCOBJ          = $(addprefix obj/,$(SRC:.c=.o))
 
-COPS = -Wall -O2 -nostartfiles -ffreestanding
-AOPS = --warn --fatal-warnings
+COPS = -Wall -nostartfiles -ffreestanding -O3 -Os -g -fdata-sections -w -DDEPRECATED -D__$(CPU)__
 
 #switch the compiler (for the internal make rules)
-CC   = msp430-gcc
+CC   = msp430-elf-gcc
 
 #all should be the first target. it's built when make is run without args
 all: ${OBJ} ${LIB} ${NAME}.a
-	echo "Starting API Compile"
+	echo "API Compile Completed"
 
 #confgigure the next line if you want to use the serial download
 
 #additional rules for files
 ${NAME}.a: ${SRCOBJ}
-	msp430-ar rcs lib/lib${NAME}.a $^  
+	msp430-elf-ar rcs lib/lib${NAME}.a $^  
 
 clean:
 	rm -f obj/*.o
@@ -29,7 +28,7 @@ clean:
 	rm -f lib/*.a
 
 obj/%.o:%.c
-	msp430-gcc -mmcu=${CPU} ${COPS} ${INC} -c -o $@ $<
+	$(CC) -mmcu=${CPU} ${COPS} ${INC} -c -o $@ $<
 
 
 ${LIB}: 
