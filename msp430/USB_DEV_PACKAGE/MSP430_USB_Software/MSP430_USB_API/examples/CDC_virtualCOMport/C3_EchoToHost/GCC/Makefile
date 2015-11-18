@@ -1,20 +1,19 @@
-DEVICE = MSP430F5529
+DEVICE = MSP430F5510
 EXAMPLE_NAME = C3_EchoToHost
-USB_BASE = ./../../../..
+USB_BASE =  ~/Sandbox/ti-leaf/msp430/USB_DEV_PACKAGE/MSP430_USB_Software/MSP430_USB_API/
 REDHAT_GCC = 
-GCC_BIN = $(REDHAT_GCC)/bin
-CC = $(GCC_BIN)/msp430-elf-gcc
-GDB = $(GCC_BIN)/msp430-elf-gdb
-SUPPORT_FILE_DIRECTORY = $(REDHAT_GCC)/include
-DRIVERLIB_DIR = $(USB_BASE)/driverlib/MSP430F5xx_6xx
+CC = msp430-elf-gcc
+GDB = msp430-elf-gdb
+SUPPORT_FILE_DIRECTORY = /usr/ti/msp430/include
+DRIVERLIB_DIR = ~/Sandbox/ti-leaf/msp430/USB_DEV_PACKAGE/MSP430_USB_Software/MSP430_USB_API/driverlib/MSP430F5xx_6xx
 MSP430_FILE = $(USB_BASE)/USB_API/msp430USB.ld
 PROJECT_ROOT = $(USB_BASE)/examples/CDC_VirtualCOMport/$(EXAMPLE_NAME)
 USB_CONFIG = $(PROJECT_ROOT)/USB_config
 USB_API = $(USB_BASE)/USB_API
 
 
-CFLAGS = -I $(SUPPORT_FILE_DIRECTORY) -I $(USB_BASE) -I $(DRIVERLIB_DIR) -I $(PROJECT_ROOT) -I $(USB_CONFIG) -I $(USB_API) -D__$(DEVICE)__ -DDEPRECATED -mmcu=msp430f5529 -O3 -Os -g -fdata-sections -w
-LFLAGS = -T $(MSP430_FILE) -T $(SUPPORT_FILE_DIRECTORY)/msp430f5529.ld -Wl,--gc-sections
+CFLAGS = -iquote$(DRIVERLIB_DIR) -iquote $(USB_API) -iquote$(USB_API)/USB_Common -iquote ../ -I../USB_config -I $(SUPPORT_FILE_DIRECTORY) -I $(USB_BASE) -I $(DRIVERLIB_DIR) -I $(PROJECT_ROOT) -I $(USB_CONFIG) -I $(USB_API) -D__$(DEVICE)__ -DDEPRECATED -mmcu=msp430f5510 -O3 -Os -fdata-sections -w
+LFLAGS = -T $(MSP430_FILE) -T $(SUPPORT_FILE_DIRECTORY)/msp430f5510.ld -Wl,--gc-sections
 
 SRC_FILES = \
 ../hal.c \

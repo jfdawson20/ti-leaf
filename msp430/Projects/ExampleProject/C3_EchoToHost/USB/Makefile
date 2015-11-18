@@ -9,8 +9,7 @@ SRCCFG          = $(wildcard USB_config/*.c)
 APPOBJ          = $(SRCAPP:USB_app/%.c=USB_app/obj/%.o)
 CFGOBJ          = $(SRCCFG:USB_config/%.c=USB_config/obj/%.o)
 
-COPS = -Wall -D__$(DEVICE)__ -DDEPRECATED -mmcu=msp430f5510 -O3 -Os -g -fdata-sections -w -nostartfiles -ffreestanding
-AOPS = --warn --fatal-warnings
+COPS = -Wall -D__$(CPU)__ -DDEPRECATED -O3 -Os -fdata-sections -w -nostartfiles -ffreestanding
 
 ULIB = ../../../../API/USB_API/lib/libti-leaf-usb-api.a
 ULIBL = ../../../../API/USB_API/lib/
@@ -20,7 +19,7 @@ CC   = msp430-elf-gcc
 
 #all should be the first target. it's built when make is run without args
 all: ${OBJ} ${LIB} ${ULIB} ${NAME}.a
-	echo "Starting API Compile"
+	echo "Finished API Compile"
 #confgigure the next line if you want to use the serial download
 
 #additional rules for files
@@ -37,11 +36,9 @@ ${ULIB}:
 	make -C ../../../../API/USB_API
 
 USB_app/obj/%.o: USB_app/%.c
-	echo "making objects"
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} ${INC} -c $< -o $@
 
 USB_config/obj/%.o: USB_config/%.c
-	echo "making config objects"
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} ${INC} -c $< -o $@
 
 ${LIB}: 
@@ -49,4 +46,4 @@ ${LIB}:
 
 ${OBJ}:
 	mkdir -p USB_app/obj 
-	mkdir -p USB_confg/obj	
+	mkdir -p USB_config/obj	

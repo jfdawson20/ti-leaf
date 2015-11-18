@@ -15,7 +15,7 @@ MSC_OBJ         = $(SRCUSB_MSC:USB_MSC_API/%.c=USB_MSC_API/obj/%.o)
 PHDC_OBJ        = $(SRCUSB_PHDC:USB_PHDC_API/%.c=USB_PHDC_API/obj/%.o)
 COM_OBJ         = $(SRCUSB_COMMON:USB_Common/%.c=USB_Common/obj/%.o)
 
-COPS = -Wall -D__$(DEVICE)__ -DDEPRECATED -mmcu=msp430f5510 -O3 -Os -g -fdata-sections -w -nostartfiles -ffreestanding
+COPS = -Wall -D__$(CPU)__ -DDEPRECATED  -O3 -Os -fdata-sections -w -nostartfiles -ffreestanding
 AOPS = --warn --fatal-warnings
 
 #switch the compiler (for the internal make rules)
@@ -23,7 +23,7 @@ CC   = msp430-elf-gcc
 
 #all should be the first target. it's built when make is run without args
 all: ${OBJ} ${LIB} ${NAME}.a
-	echo "Starting API Compile"
+	echo "Finished API Compile"
 #confgigure the next line if you want to use the serial download
 
 #additional rules for files
@@ -39,23 +39,18 @@ clean:
 	rm -f lib/*.a
 
 USB_Common/obj/%.o: USB_Common/%.c
-	echo "making objects"
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} ${INC} -c $< -o $@
 
 USB_CDC_API/obj/%.o: USB_CDC_API/%.c
-	echo "making config objects"
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} ${INC} -c $< -o $@
 
 USB_HID_API/obj/%.o: USB_HID_API/%.c
-	echo "making config objects"
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} ${INC} -c $< -o $@
     
 USB_MSC_API/obj/%.o: USB_MSC_API/%.c
-	echo "making config objects"
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} ${INC} -c $< -o $@
     
 USB_PHDC_API/obj/%.o: USB_PHDC_API/%.c
-	echo "making config objects"
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} ${INC} -c $< -o $@
 ${LIB}: 
 	mkdir -p lib

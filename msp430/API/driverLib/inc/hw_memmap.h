@@ -44,8 +44,10 @@
 #include "../deprecated/IAR/msp430f5xx_6xxgeneric.h"
 #elif defined(__TI_COMPILER_VERSION__)
 #include "../deprecated/CCS/msp430f5xx_6xxgeneric.h"
+#elif defined(__GNUC__)
+#include "msp430f5xx_6xxgeneric.h"
 #else
-#include <msp430xgeneric.h>
+#include "msp430f5xx_6xxgeneric.h"
 #endif
 
 #include "stdint.h"

@@ -7,7 +7,7 @@ OBJ             = obj
 SRC             = $(wildcard *.c)
 SRCOBJ          = $(addprefix obj/,$(SRC:.c=.o))
 
-COPS = -Wall -nostartfiles -ffreestanding -O3 -Os -g -fdata-sections -w -DDEPRECATED -D__$(CPU)__
+COPS = -Wall -O3 -Os -fdata-sections -w -DDEPRECATED -D__$(CPU)__ -nostartfiles -ffreestanding
 
 #switch the compiler (for the internal make rules)
 CC   = msp430-elf-gcc
