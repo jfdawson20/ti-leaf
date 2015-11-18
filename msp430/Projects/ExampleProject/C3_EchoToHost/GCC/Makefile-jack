@@ -6,6 +6,8 @@ INC             = -I/usr/ti/msp430/include -I../inc -I../../../../API/driverLib 
 #IINC            = -iquote../inc -iquote../../../../API/driverLib -iquote../../../../API/driverLib/inc -iquote../../../../API/USB_API -iquote../../../../API/USB_API/USB_Common/ -iquote../USB/
 BIN             = ../bin
 SRC             = $(wildcard ../src/*.c)
+SRC		+= $(wildcard ../USB/USB_app/*.c)
+SRC		+= $(wildcard ../USB/USB_config/*.c)
 SRCOBJ          = $(addprefix ../lib/, $(notdir $(SRC:.c=.o)))
 LD		= -T/usr/ti/msp430/include/msp430f5510.ld -T../../../../API/USB_API/msp430USB.ld
 LIBAPI 		= ../../../../API/driverLib/lib/ti-leaf-api.a
@@ -32,8 +34,8 @@ all: ${BIN} ${LIB} ${LIBAPI} ${USBAPI} ${NAME}.elf ${NAME}.hex ${NAME}.txt ${NAM
 #confgigure the next line if you want to use the serial download
 
 #additional rules for files
-${NAME}.elf: ../lib/hal.o ../lib/main.o ../lib/system_pre_init.o
-	$(CC) ${LOPS} ${LD} ${INC} ${LIBPATH} ../lib/hal.o ../lib/system_pre_init.o ../lib/main.o -lti-leaf-api -lti-leaf-usb-app-api -lti-leaf-usb-api -lti-leaf-usb-app-api -lti-leaf-api -o ${BIN}/${NAME}.elf 
+${NAME}.elf: ../lib/hal.o ../lib/main.o ../lib/system_pre_init.o ../lib/usbConstructs.o ../lib/usbEventHandling.o ../lib/descriptors.o ../lib/UsbIsr.o
+	$(CC) ${LOPS} ${LD} ${INC} ${LIBPATH} -lti-leaf-usb-api ../lib/hal.o ../lib/system_pre_init.o ../lib/main.o ../lib/usbConstructs.o ../lib/usbEventHandling.o ../lib/descriptors.o ../lib/UsbIsr.o -lti-leaf-api -lti-leaf-usb-api -lti-leaf-api -o ${BIN}/${NAME}.elf 
 
 ${NAME}.hex: ${BIN}/${NAME}.elf
 	$(OBCC) -O ihex $^ ${BIN}/$@
@@ -67,11 +69,15 @@ ${LIBAPI}:
 	make -C ../../../../API/driverLib
 
 ${USBAPI}:
-	make -C ../USB/	
+	make -C ../../../../API/USB_API	
 
 ${SRCOBJ}: ${SRC}
 	echo "SRC COMPILE"
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} -iquote../../../../API -iquote ../../../../../API/USB_API/USB_Common/ ${INC} -c ../src/main.c -o ../lib/main.o  
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} -iquote../../../../API -iquote ../../../../../API/USB_API/USB_Common/ ${INC} -c ../src/hal.c -o ../lib/hal.o  
 	msp430-elf-gcc -mmcu=${CPU} ${COPS} -iquote../../../../API -iquote ../../../../../API/USB_API/USB_Common/ ${INC} -c ../src/system_pre_init.c -o ../lib/system_pre_init.o  
+	msp430-elf-gcc -mmcu=${CPU} ${COPS} -iquote../../../../API -iquote ../../../../../API/USB_API/USB_Common/ ${INC} -c ../USB/USB_app/usbConstructs.c -o ../lib/usbConstructs.o  
+	msp430-elf-gcc -mmcu=${CPU} ${COPS} -iquote../../../../API -iquote ../../../../../API/USB_API/USB_Common/ ${INC} -c ../USB/USB_app/usbEventHandling.c -o ../lib/usbEventHandling.o  
+	msp430-elf-gcc -mmcu=${CPU} ${COPS} -iquote../../../../API -iquote ../../../../../API/USB_API/USB_Common/ ${INC} -c ../USB/USB_config/descriptors.c -o ../lib/descriptors.o  
+	msp430-elf-gcc -mmcu=${CPU} ${COPS} -iquote../../../../API -iquote ../../../../../API/USB_API/USB_Common/ ${INC} -c ../USB/USB_config/UsbIsr.c -o ../lib/UsbIsr.o  
 
