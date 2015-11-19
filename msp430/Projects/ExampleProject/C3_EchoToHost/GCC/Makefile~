@@ -60,28 +60,28 @@ H2T    	= ../../../../../host/tools/hex2txt/hex2txt.bin#				# Hex2Txt utility (U
 
 
 #all should be the first target. it's built when make is run without args
-all: ${BIN} ${OBJ} ${LIBAPI} ${USBAPI} ${BIN}/${NAME}.elf ${BIN}/$(NAME).hex ${BIN}/$(NAME).txt ${BIN}/$(NAME).lst 
+all: ${BIN} ${OBJ} ${LIBAPI} ${USBAPI} ${BIN}/${NAME}.elf ../bin/$(NAME).hex ../bin/$(NAME).txt ../bin/$(NAME).lst 
 
 #Download target. running "make download" will perform a full compile and attempt to download the image onto 
 #the ti-leaf board. for this to work the board must be installed in a USB port on the system and put into bootloader mode
-download: ${BIN}/${NAME}.txt
+download: ${NAME}.txt
 	${PROG} ../bin/${NAME}.txt 
 
 # .elf target: compiles project and produces an output binary in msp430-elf format 
-${BIN}/${NAME}.elf: ${PROJOBJ} ${USBAPPOBJ} ${USBCFGOBJ}
+:x
 	$(CC) ${LOPS} ${LD} ${INC} ${LIBPATH} -lti-leaf-usb-api -lti-leaf-api -lti-leaf-usb-api -lti-leaf-api ${PROJOBJ} ${USBAPPOBJ} ${USBCFGOBJ} -lti-leaf-usb-api -lti-leaf-api -lti-leaf-usb-api -lti-leaf-api -o ../bin/${NAME}.elf
 
 # .hex target: converts .elf binary to an intel hex .hex binary. 
-${BIN}/${NAME}.hex: ${BIN}/${NAME}.elf
+../bin/${NAME}.hex: ../bin/${NAME}.elf
 	$(OBCC) -O ihex $^ ../bin/$@
 
 # .lst target. converts .elf to .lst file. .lst file contains the assembly dump of the entire binary 
-${BIN}/${NAME}.lst: ${BIN}/${NAME}.elf
+../bin/${NAME}.lst: ../bin/${NAME}.elf
 	$(OBJDMP) -dSt $^ >../bin/$@
 
 # .txt target: converts .hex to .txt binary. .txt binaries are used by the BSL USB programmer to program the board
-${BIN}/${NAME}.txt: ${BIN}/${NAME}.hex
-	$(H2T) ${BIN}/${NAME}.hex ${BIN}/${NAME}.txt
+../bin/${NAME}.txt: ../bin/${NAME}.hex
+	$(H2T) ../bin/${NAME}.hex ../bin/${NAME}.txt
 
 # clean target: deletes all generated output files (.o, .bin, etc) 
 clean:
