@@ -33,6 +33,7 @@ ser = serial.Serial(
 
 data    = []
 payload = []
+maxrate = 0
 for i in range(byteSize):
 	payload.append('b'*i)
 
@@ -51,7 +52,9 @@ for p in payload:
 
 	rate = (siter*8*x)/tElapse
 	data.append((x,rate/siter))
-	
+	if rate > maxrate:
+		maxrate = rate
+		maxsize = x
 	print "TIME: " + str(tElapse) + " s\n"
 	print "RATE: " + str(rate) + " bits/s\n"
 	print "RATEL " + str(rate/1000) + " kb/s\n"
@@ -65,6 +68,9 @@ for stuff in data:
 	
 if logfile != None:
 	fhandle.close()
+
+print "MAX DATA RATE: " + str(maxrate/1000) + " kb/s\n"
+print "PAYLOAD SIZE:  " + str(maxsize) + " bytes\n"
 
 print "PROGRAM FINISHED\n"
 

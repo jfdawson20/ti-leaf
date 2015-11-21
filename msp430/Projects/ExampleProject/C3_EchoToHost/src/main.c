@@ -80,7 +80,7 @@ void main (void)
     PMM_setVCore(PMM_CORE_LEVEL_2);
 
     USBHAL_initPorts();           // Config GPIOS for low-power (output low)
-    USBHAL_initClocks(8000000);   // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
+    USBHAL_initClocks(24000000);   // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
     USB_setup(TRUE, TRUE); // Init USB & events; if a host is present, connect
 
     __enable_interrupt();  // Enable interrupts globally
