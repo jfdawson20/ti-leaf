@@ -45,6 +45,7 @@
 #define GPIO_ALL	GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3| \
 					GPIO_PIN4|GPIO_PIN5|GPIO_PIN6|GPIO_PIN7
 
+static uint32_t CLOCKFREQ;
 
 
 /*
@@ -108,6 +109,22 @@ void USBHAL_initPorts(void)
 #endif
 }
 
+//TI Leaf Board Specific init
+void TILEAF_BoardInit(uint32_t clockFreq)
+{
+    //set clock frequency variable '
+    CLOCKFREQ = clockFreq;
+
+    WDT_A_hold(WDT_A_BASE); // Stop watchdog timer
+    // Minimum Vcore setting required for the USB API is PMM_CORE_LEVEL_2 .
+    PMM_setVCore(PMM_CORE_LEVEL_2);
+    USBHAL_initPorts();           // Config GPIOS for low-power (output low)
+    USBHAL_initClocks(clockFreq);   // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
+    USB_setup(TRUE, TRUE); // Init USB & events; if a host is present, connect
+
+    __enable_interrupt();  // Enable interrupts globally
+}
+
 void USBHAL_initClocks(uint32_t mclkFreq)
 {
 	UCS_initClockSignal(
@@ -125,4 +142,5 @@ void USBHAL_initClocks(uint32_t mclkFreq)
         mclkFreq/32768);
 
 }
+
 //Released_Version_5_00_01
