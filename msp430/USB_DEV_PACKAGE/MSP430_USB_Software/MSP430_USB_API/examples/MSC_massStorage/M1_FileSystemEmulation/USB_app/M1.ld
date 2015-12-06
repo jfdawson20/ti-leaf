@@ -1,5 +1,0 @@
-
-SECTIONS
-{
-    MYDRIVE      : {} > FLASH2
-}
