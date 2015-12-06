@@ -1,9 +1,12 @@
 #include "usbserial.h"
 
+
 // Global flags set by events
 volatile uint8_t bCDCDataReceived_event = FALSE;  // Flag set by event handler to 
                                                // indicate data has been 
                                                // received into USB buffer
+
+
 /*  
  * ======== UNMI_ISR ========
  */
@@ -92,7 +95,7 @@ uint16_t SendBuffer(char *buf,uint16_t length )
             // This case is executed while your device is enumerated on the
             // USB host
             case ST_ENUM_ACTIVE:
-            	if (USBCDC_sendDataInBackground((uint8_t*)buf, length, CDC0_INTFNUM, 1))
+            	if (USBCDC_sendDataAndWaitTillDone((uint8_t*)buf, length, CDC0_INTFNUM, 1))
 		{
                         SendError = 0x01;
                         break;
@@ -111,7 +114,7 @@ uint16_t SendBuffer(char *buf,uint16_t length )
 uint16_t ReceiveBuffer(char *buf)
 {
 	uint8_t ReceiveError = 0, SendError = 0;
-        uint16_t count;
+        uint16_t count = 0;
         // Check the USB state and directly main loop accordingly
         switch (USB_getConnectionState())
         {
@@ -123,7 +126,7 @@ uint16_t ReceiveBuffer(char *buf)
                     bCDCDataReceived_event = FALSE;
 
                     count = USBCDC_receiveDataInBuffer((uint8_t*)buf,
-                        BUFFER_SIZE,
+                        64,
                         CDC0_INTFNUM);
 
                 }

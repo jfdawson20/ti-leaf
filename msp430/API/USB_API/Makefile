@@ -2,7 +2,8 @@
 NAME            = ti-leaf-usb-api
 CPU             = msp430f5510
 LIB             = lib
-INC             = -iquote. -iquote../driverLib -I../driverLib -I.. -I../../Projects/ExampleProject/C3_EchoToHost/USB/USB_config -I/usr/ti/msp430/include
+#INC             = -iquote. -iquote../driverLib -I../driverLib -I.. -I../../Projects/ExampleProject/USB_Serial/USB/USB_config -I/usr/ti/msp430/include
+INC             = -iquote. -iquote../driverLib -I../driverLib -I.. -IUSR_USB -I/usr/ti/msp430/include
 OBJ             = obj
 SRCUSB_CDC      = $(wildcard USB_CDC_API/*.c)         
 SRCUSB_HID      = $(wildcard USB_HID_API/*.c)         

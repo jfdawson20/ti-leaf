@@ -17,14 +17,15 @@ void main (void)
 {
    
     uint16_t ret;
-    char buf[BUFFER_SIZE] = "hello\n\r";
+    char buf[BUFFER_SIZE] = "";
 
     TILEAF_BoardInit(24000000);
     	       
     while (1)
     {
-	SendBuffer(buf,7);
-	__delay_cycles(24000000);      
+	//SendBuffer(buf,7);
+	//__delay_cycles(24000000);      
+	checkUSB(buf);
 
     }  
 }

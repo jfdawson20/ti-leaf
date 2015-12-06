@@ -1,4 +1,9 @@
 #include "usbserial.h"
+
+// Global flags set by events
+volatile uint8_t bCDCDataReceived_event = FALSE;  // Flag set by event handler to 
+                                               // indicate data has been 
+                                               // received into USB buffer
 /*  
  * ======== UNMI_ISR ========
  */

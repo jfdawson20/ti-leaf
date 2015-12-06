@@ -9,10 +9,7 @@
 #include "hal.h"
 #include "usbserial.h"
                   
-// Global flags set by events
-volatile uint8_t bCDCDataReceived_event = FALSE;  // Flag set by event handler to 
-                                               // indicate data has been 
-                                               // received into USB buffer
+
 /*----------------------------------------------------------------------------+
  | Main Routine                                                                |
  +----------------------------------------------------------------------------*/
@@ -22,13 +19,12 @@ void main (void)
     uint16_t ret;
     char buf[BUFFER_SIZE] = "hello\n\r";
 
-    TILEAF_BoardInit(24000000);
+    TILEAF_BoardInit(24000000)
     	       
     while (1)
     {
-	//SendBuffer(buf,7);
-	//__delay_cycles(24000000);      
-	checkUSB(buf);
+	SendBuffer(buf,7);
+	__delay_cycles(12000000);      
 
     }  
 }

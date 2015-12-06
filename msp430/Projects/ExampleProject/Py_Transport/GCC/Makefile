@@ -105,7 +105,7 @@ dist:
 #bin target: create bin directory to hold project outputs
 ${BIN}: 
 	mkdir -p ../bin
-	ln -f -s ../../Projects/ExampleProject/USB_Serial/USB/USB_config ${AUINC}/USR_USB 
+	ln -f -s ../../Projects/ExampleProject/Py_Transport/USB/USB_config ${AUINC}/USR_USB 
 
 #obj target: create obj directories to hold object outputs 
 ${OBJ}:
