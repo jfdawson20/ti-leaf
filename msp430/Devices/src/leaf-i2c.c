@@ -23,14 +23,14 @@ int16_t Leaf_I2C_Init(struct Leaf_I2C_Bus *bus, uint8_t mode, uint8_t speed, uin
 		
 		//set data rate based off of user config
 		if(speed == SPEED_400K)
-			masterInit.dataRate = EUSCI_B_I2C_SET_DATA_RATE_400KBPS;
+			masterInit.dataRate = USCI_B_I2C_SET_DATA_RATE_400KBPS;
 
 		else
-			masterInit.dataRate = EUSCI_B_I2C_SET_DATA_RATE_100KBPS;
+			masterInit.dataRate = USCI_B_I2C_SET_DATA_RATE_100KBPS;
 
 		//byte threshold feature not used currently
 		masterInit.byteCounterThreshold = 0x00;
-		masterInit.autoSTOPGeneration	= EUSCI_B_I2C_NO_AUTO_STOP;
+		masterInit.autoSTOPGeneration	= USCI_B_I2C_NO_AUTO_STOP;
 
 		//initialize Master Address
 		USCI_B_I2C_initMaster(I2C_BASE, masterInit);
@@ -42,8 +42,6 @@ int16_t Leaf_I2C_Init(struct Leaf_I2C_Bus *bus, uint8_t mode, uint8_t speed, uin
 		USCI_B_I2C_initSlave(I2C_BASE, slaveAddr);	
 	}	
 
-	//enable I2C
-	USCI_B_I2C_Enable(I2C_BASE);
 	return 0;
 
 }
@@ -52,24 +50,125 @@ int16_t Leaf_I2C_WritePacket(struct Leaf_I2C_Bus *bus, struct Leaf_I2C_Packet *p
 {	
 
 	uint16_t i = 0;
-	uint32_t timeout = 1;
+	uint32_t timeout = 100;
+    
 	//wait for bus to be free 
 	while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
 	
 	//set slave address
 	USCI_B_I2C_setSlaveAddress(bus->base, p->address);
 
+    //Set Transmit mode
+    USCI_B_I2C_setMode(bus->base,USCI_B_I2C_TRANSMIT_MODE);
+
+    //Enable I2C Module to start operations
+    USCI_B_I2C_enable(bus->base);
+    
 	//send first byte 
 	USCI_B_I2C_masterSendMultiByteStartWithTimeout(b->base,p->buffer[0],p->timeout);
-	
+        
 	for (i =1;i < (p->length-1);i++)
 	{
 		while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
-		USCI_B_I2C_masterSendMultiByteNextWithTimeout(b->base,p->buffer[i],p->timeout);	
+		USCI_B_I2C_masterSendMultiByteNextWithTimeout(b->base,p->buffer[i],p->timeout);	      
 	}
-	
+    
+    while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);    
 	USCI_B_I2C_masterSendMultiByteStopWithTimeout((b->base,p->buffer[i],p->timeout);
+	
+    //disable I2C 
+    USCI_B_I2C_disable(bus->base);
+	return(0);
+}	
+
+int16_t Leaf_I2C_WriteByte(struct Leaf_I2C_Bus *bus, uint8_t data, uint8_t address)
+{	
+
+	uint16_t i = 0;
+	uint32_t timeout = 1;
+	//wait for bus to be free 
+	while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
+	
+	//set slave address
+	USCI_B_I2C_setSlaveAddress(bus->base, address);
+
+    //Set Transmit mode
+    USCI_B_I2C_setMode(bus->base,USCI_B_I2C_TRANSMIT_MODE);
+
+    //Enable I2C Module to start operations
+    USCI_B_I2C_enable(bus->base);
+    
+	//send first byte 
+	USCI_B_I2C_masterSendSingleByte(b->base,data);
+	
+    //wait for completion
+    while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);    
 	
 	return(0);
 }	
+
+int16_t Leaf_I2C_ReadPacket(struct Leaf_I2C_Bus *bus, struct Leaf_I2C_Packet *p)
+{	
+
+	uint16_t i = 0;
+	uint32_t timeout = 100;
+    
+	//wait for bus to be free 
+	while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
+	
+	//set slave address
+	USCI_B_I2C_setSlaveAddress(bus->base, p->address);
+
+    //Set Transmit mode
+    USCI_B_I2C_setMode(bus->base,USCI_B_I2C_RECEIVE_MODE);
+
+    //Enable I2C Module to start operations
+    USCI_B_I2C_enable(bus->base);
+    
+    //init multi receive , send start 
+    USCI_B_I2C_masterReceiveMultiByteStart(bus->base);
+    
+	for (i =0;i < (p->length-1);i++)
+	{
+		while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
+		p->buffer[i] = USCI_B_I2C_masterReceiveMultiByteNext(b->base);	      
+	}
+    
+    while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);    
+	p->buffer[i] = USCI_B_I2C_masterReceiveMultiByteFinish((b->base);
+	
+    //disable I2C 
+    USCI_B_I2C_disable(bus->base);
+	return(0);
+}
+
+int16_t Leaf_I2C_ReadByte(struct Leaf_I2C_Bus *bus, uint8_t *data )
+{	
+
+	uint16_t i = 0;
+	uint32_t timeout = 100;
+    
+	//wait for bus to be free 
+	while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
+	
+	//set slave address
+	USCI_B_I2C_setSlaveAddress(bus->base, p->address);
+
+    //Set Transmit mode
+    USCI_B_I2C_setMode(bus->base,USCI_B_I2C_RECEIVE_MODE);
+
+    //Enable I2C Module to start operations
+    USCI_B_I2C_enable(bus->base);
+    
+    //init multi receive , send start 
+    USCI_B_I2C_masterReceiveSingleStart(bus->base);
+    
+	while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
+	*data = USCI_B_I2C_masterReceiveSingle(b->base);	      
+	
+    //disable I2C 
+    USCI_B_I2C_disable(bus->base);
+	return(0);
+}
+
 /* End Of File*/
