@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "leaf-I2c.h"
+#include "leaf-i2c.h"
 
 
 int16_t Leaf_I2C_Init(struct Leaf_I2C_Bus *bus, uint8_t mode, uint8_t speed, uint8_t slaveAddr)
@@ -12,13 +12,13 @@ int16_t Leaf_I2C_Init(struct Leaf_I2C_Bus *bus, uint8_t mode, uint8_t speed, uin
 
 	if (mode == MODE_MASTER)
 	{
-		UCSI_B_I2C_initMasterParam masterInit;
+		USCI_B_I2C_initMasterParam masterInit;
 
 		//set clock source based off of board config
-		masterInit.selectClockSource = GetClockSource(I2C_CLK);
+		masterInit.selectClockSource = Board_GetClockSource(I2C_CLK);
 	
 		//set frequency based off of board config
-		masterInit.i2cClk = getClockSpeed(I2C_CLK);
+		masterInit.i2cClk = Board_GetClockSpeed(I2C_CLK);
 		
 		//set data rate based off of user config
 		if(speed == SPEED_400K)
@@ -27,12 +27,8 @@ int16_t Leaf_I2C_Init(struct Leaf_I2C_Bus *bus, uint8_t mode, uint8_t speed, uin
 		else
 			masterInit.dataRate = USCI_B_I2C_SET_DATA_RATE_100KBPS;
 
-		//byte threshold feature not used currently
-		masterInit.byteCounterThreshold = 0x00;
-		masterInit.autoSTOPGeneration	= USCI_B_I2C_NO_AUTO_STOP;
-
 		//initialize Master Address
-		USCI_B_I2C_initMaster(I2C_BASE, masterInit);
+		USCI_B_I2C_initMaster(I2C_BASE, &masterInit);
 	
 	}
 	else
@@ -64,16 +60,16 @@ int16_t Leaf_I2C_WritePacket(struct Leaf_I2C_Bus *bus, struct Leaf_I2C_Packet *p
     USCI_B_I2C_enable(bus->base);
     
 	//send first byte 
-	USCI_B_I2C_masterSendMultiByteStartWithTimeout(b->base,p->buffer[0],p->timeout);
+	USCI_B_I2C_masterSendMultiByteStartWithTimeout(bus->base,p->buffer[0],p->timeout);
         
 	for (i =1;i < (p->length-1);i++)
 	{
 		while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
-		USCI_B_I2C_masterSendMultiByteNextWithTimeout(b->base,p->buffer[i],p->timeout);	      
+		USCI_B_I2C_masterSendMultiByteNextWithTimeout(bus->base,p->buffer[i],p->timeout);	      
 	}
     
     while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);    
-	USCI_B_I2C_masterSendMultiByteStopWithTimeout((b->base,p->buffer[i],p->timeout);
+	USCI_B_I2C_masterSendMultiByteFinishWithTimeout(bus->base,p->buffer[i],p->timeout);
 	
     //disable I2C 
     USCI_B_I2C_disable(bus->base);
@@ -98,7 +94,7 @@ int16_t Leaf_I2C_WriteByte(struct Leaf_I2C_Bus *bus, uint8_t data, uint8_t addre
     USCI_B_I2C_enable(bus->base);
     
 	//send first byte 
-	USCI_B_I2C_masterSendSingleByte(b->base,data);
+	USCI_B_I2C_masterSendSingleByte(bus->base,data);
 	
     //wait for completion
     while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);    
@@ -130,18 +126,18 @@ int16_t Leaf_I2C_ReadPacket(struct Leaf_I2C_Bus *bus, struct Leaf_I2C_Packet *p)
 	for (i =0;i < (p->length-1);i++)
 	{
 		while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
-		p->buffer[i] = USCI_B_I2C_masterReceiveMultiByteNext(b->base);	      
+		p->buffer[i] = USCI_B_I2C_masterReceiveMultiByteNext(bus->base);	      
 	}
     
     while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);    
-	p->buffer[i] = USCI_B_I2C_masterReceiveMultiByteFinish((b->base);
+	p->buffer[i] = USCI_B_I2C_masterReceiveMultiByteFinish(bus->base);
 	
     //disable I2C 
     USCI_B_I2C_disable(bus->base);
 	return(0);
 }
 
-int16_t Leaf_I2C_ReadByte(struct Leaf_I2C_Bus *bus, uint8_t *data )
+int16_t Leaf_I2C_ReadByte(struct Leaf_I2C_Bus *bus, uint8_t *data, uint8_t address )
 {	
 
 	uint16_t i = 0;
@@ -151,7 +147,7 @@ int16_t Leaf_I2C_ReadByte(struct Leaf_I2C_Bus *bus, uint8_t *data )
 	while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
 	
 	//set slave address
-	USCI_B_I2C_setSlaveAddress(bus->base, p->address);
+	USCI_B_I2C_setSlaveAddress(bus->base, address);
 
     //Set Transmit mode
     USCI_B_I2C_setMode(bus->base,USCI_B_I2C_RECEIVE_MODE);
@@ -163,7 +159,7 @@ int16_t Leaf_I2C_ReadByte(struct Leaf_I2C_Bus *bus, uint8_t *data )
     USCI_B_I2C_masterReceiveSingleStart(bus->base);
     
 	while(USCI_B_I2C_isBusBusy(bus->base) != USCI_B_I2C_BUS_NOT_BUSY);
-	*data = USCI_B_I2C_masterReceiveSingle(b->base);	      
+	*data = USCI_B_I2C_masterReceiveSingle(bus->base);	      
 	
     //disable I2C 
     USCI_B_I2C_disable(bus->base);

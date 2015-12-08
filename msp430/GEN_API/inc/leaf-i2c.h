@@ -4,7 +4,7 @@
 /* Library Includes */
 #include <stdio.h>
 #include <usci_b_i2c.h>
-
+#include "board.h"
 //*****************************************************************************
 //
 // If building with a C++ compiler, make all of the definitions in this header
@@ -64,10 +64,10 @@ struct Leaf_I2C_Device
 //*****************************************************************************
 struct Leaf_I2C_Packet
 {
-	uint8_t slaveAddress;
+	uint8_t address;
 	uint8_t length;
 	uint8_t buffer[64];
-	uint8_t timeout = 100;
+	uint32_t timeout;
 };
 
 /* Function Prototypes */
@@ -105,7 +105,7 @@ int16_t Leaf_I2C_Init(struct Leaf_I2C_Bus *bus, uint8_t mode, uint8_t speed, uin
 //! \return 0 on success
 //
 //*****************************************************************************
-int16_t Leaf_I2C_WritePacket(struct Leaf_I2C_Packet *p);
+int16_t Leaf_I2C_WritePacket(struct Leaf_I2C_Bus *bus, struct Leaf_I2C_Packet *p);
 
 
 //*****************************************************************************
@@ -123,7 +123,7 @@ int16_t Leaf_I2C_WritePacket(struct Leaf_I2C_Packet *p);
 //! \return 0 on success
 //
 //*****************************************************************************
-int16_t Leaf_I2C_WriteByte(uint8_t address, uint8_t data, uint8_t address);
+int16_t Leaf_I2C_WriteByte(struct Leaf_I2C_Bus *bus, uint8_t data, uint8_t address);
 
 
 //*****************************************************************************
@@ -140,7 +140,7 @@ int16_t Leaf_I2C_WriteByte(uint8_t address, uint8_t data, uint8_t address);
 //! \return 0 on success
 //
 //*****************************************************************************
-int16_t Leaf_I2C_ReadPacket(struct Leaf_I2C_Packet *p);
+int16_t Leaf_I2C_ReadPacket(struct Leaf_I2C_Bus *bus, struct Leaf_I2C_Packet *p);
 
 
 //*****************************************************************************
@@ -158,7 +158,7 @@ int16_t Leaf_I2C_ReadPacket(struct Leaf_I2C_Packet *p);
 //! \return 0 on success
 //
 //*****************************************************************************
-int16_t Leaf_I2C_ReadByte(uint8_t address, uint8_t *data, uint8_t address)
+int16_t Leaf_I2C_ReadByte(struct Leaf_I2C_Bus *bus, uint8_t *data, uint8_t address);
 
 #ifdef __cplusplus
 }

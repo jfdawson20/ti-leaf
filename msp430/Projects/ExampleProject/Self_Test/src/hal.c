@@ -127,19 +127,16 @@ void TILEAF_BoardInit(uint32_t clockFreq)
 
 void USBHAL_initClocks(uint32_t mclkFreq)
 {
-	UCS_initClockSignal(
-	   UCS_FLLREF,
-	   UCS_REFOCLK_SELECT,
-	   UCS_CLOCK_DIVIDER_1);
+	//setup FLL reference clock
+    UCS_initClockSignal(UCS_FLLREF, UCS_REFOCLK_SELECT, UCS_CLOCK_DIVIDER_1);
 
-	UCS_initClockSignal(
-	   UCS_ACLK,
-	   UCS_REFOCLK_SELECT,
-	   UCS_CLOCK_DIVIDER_1);
+    //setup ACLK 
+	UCS_initClockSignal(UCS_ACLK, UCS_REFOCLK_SELECT, UCS_CLOCK_DIVIDER_1);
 
-    UCS_initFLLSettle(
-        mclkFreq/1000,
-        mclkFreq/32768);
+    //sm clock 
+    USC_initClockSignal(UCS_SMCLK, UCS_DCOCLK_SELECT, UCS_CLOCK_DIVIDER_16);
+    
+    UCS_initFLLSettle(mclkFreq/1000, mclkFreq/32768);
 
 }
 

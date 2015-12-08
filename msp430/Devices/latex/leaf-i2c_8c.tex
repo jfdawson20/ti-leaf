@@ -1,0 +1,84 @@
+\hypertarget{leaf-i2c_8c}{\section{src/leaf-\/i2c.c File Reference}
+\label{leaf-i2c_8c}\index{src/leaf-\/i2c.\-c@{src/leaf-\/i2c.\-c}}
+}
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include \char`\"{}leaf-\/\-I2c.\-h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int16\-\_\-t \hyperlink{leaf-i2c_8c_a8baf85c610de76ab3ce759b088191f19}{Leaf\-\_\-\-I2\-C\-\_\-\-Init} (struct \hyperlink{structLeaf__I2C__Bus}{Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$bus, uint8\-\_\-t mode, uint8\-\_\-t speed, uint8\-\_\-t slave\-Addr)
+\begin{DoxyCompactList}\small\item\em Initializes Leaf I2\-C Bus. \end{DoxyCompactList}\item 
+int16\-\_\-t \hyperlink{leaf-i2c_8c_a7c3cf399b26fb2d1545e8891a751ba32}{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Packet} (struct \hyperlink{structLeaf__I2C__Bus}{Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$bus, struct \hyperlink{structLeaf__I2C__Packet}{Leaf\-\_\-\-I2\-C\-\_\-\-Packet} $\ast$p)
+\item 
+int16\-\_\-t \hyperlink{leaf-i2c_8c_a097ffc31e1b77c7630568f28e6121a0f}{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Byte} (struct \hyperlink{structLeaf__I2C__Bus}{Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$bus, uint8\-\_\-t data, uint8\-\_\-t address)
+\item 
+int16\-\_\-t \hyperlink{leaf-i2c_8c_a377d1607018626036cff908e6d73fe75}{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Packet} (struct \hyperlink{structLeaf__I2C__Bus}{Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$bus, struct \hyperlink{structLeaf__I2C__Packet}{Leaf\-\_\-\-I2\-C\-\_\-\-Packet} $\ast$p)
+\item 
+int16\-\_\-t \hyperlink{leaf-i2c_8c_a1821cafd3bb87041dc6cfe125841a2a8}{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Byte} (struct \hyperlink{structLeaf__I2C__Bus}{Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$bus, uint8\-\_\-t $\ast$data)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{leaf-i2c_8c_a8baf85c610de76ab3ce759b088191f19}{\index{leaf-\/i2c.\-c@{leaf-\/i2c.\-c}!Leaf\-\_\-\-I2\-C\-\_\-\-Init@{Leaf\-\_\-\-I2\-C\-\_\-\-Init}}
+\index{Leaf\-\_\-\-I2\-C\-\_\-\-Init@{Leaf\-\_\-\-I2\-C\-\_\-\-Init}!leaf-i2c.c@{leaf-\/i2c.\-c}}
+\subsubsection[{Leaf\-\_\-\-I2\-C\-\_\-\-Init}]{\setlength{\rightskip}{0pt plus 5cm}int16\-\_\-t Leaf\-\_\-\-I2\-C\-\_\-\-Init (
+\begin{DoxyParamCaption}
+\item[{struct {\bf Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$}]{bus, }
+\item[{uint8\-\_\-t}]{mode, }
+\item[{uint8\-\_\-t}]{speed, }
+\item[{uint8\-\_\-t}]{slave\-Addr}
+\end{DoxyParamCaption}
+)}}\label{leaf-i2c_8c_a8baf85c610de76ab3ce759b088191f19}
+
+
+Initializes Leaf I2\-C Bus. 
+
+This function initializes operation of the I2\-C Block on the Leaf board. This function must be called before any other I2\-C A\-P\-I Functions are used
+
+
+\begin{DoxyParams}{Parameters}
+{\em bus,Pointer} & to I2\-C Bus structure used with all Leaf I2\-C A\-P\-I Functions \\
+\hline
+{\em mode,Configures} & I2\-C Bus as Master or Slave (M\-O\-D\-E\-\_\-\-M\-A\-S\-T\-E\-R, M\-O\-D\-E\-\_\-\-S\-L\-A\-V\-E) \\
+\hline
+{\em speed,Configures} & I2\-C Bus speed (S\-P\-E\-E\-D\-\_\-400\-K, S\-P\-E\-E\-D\-\_\-100\-K) \\
+\hline
+{\em slave\-Addr,Sets} & Slave Address (Slave Mode Only)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, bus structure will be populated 
+\end{DoxyReturn}
+\hypertarget{leaf-i2c_8c_a1821cafd3bb87041dc6cfe125841a2a8}{\index{leaf-\/i2c.\-c@{leaf-\/i2c.\-c}!Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Byte@{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Byte}}
+\index{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Byte@{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Byte}!leaf-i2c.c@{leaf-\/i2c.\-c}}
+\subsubsection[{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Byte}]{\setlength{\rightskip}{0pt plus 5cm}int16\-\_\-t Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Byte (
+\begin{DoxyParamCaption}
+\item[{struct {\bf Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$}]{bus, }
+\item[{uint8\-\_\-t $\ast$}]{data}
+\end{DoxyParamCaption}
+)}}\label{leaf-i2c_8c_a1821cafd3bb87041dc6cfe125841a2a8}
+\hypertarget{leaf-i2c_8c_a377d1607018626036cff908e6d73fe75}{\index{leaf-\/i2c.\-c@{leaf-\/i2c.\-c}!Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Packet@{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Packet}}
+\index{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Packet@{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Packet}!leaf-i2c.c@{leaf-\/i2c.\-c}}
+\subsubsection[{Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Packet}]{\setlength{\rightskip}{0pt plus 5cm}int16\-\_\-t Leaf\-\_\-\-I2\-C\-\_\-\-Read\-Packet (
+\begin{DoxyParamCaption}
+\item[{struct {\bf Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$}]{bus, }
+\item[{struct {\bf Leaf\-\_\-\-I2\-C\-\_\-\-Packet} $\ast$}]{p}
+\end{DoxyParamCaption}
+)}}\label{leaf-i2c_8c_a377d1607018626036cff908e6d73fe75}
+\hypertarget{leaf-i2c_8c_a097ffc31e1b77c7630568f28e6121a0f}{\index{leaf-\/i2c.\-c@{leaf-\/i2c.\-c}!Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Byte@{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Byte}}
+\index{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Byte@{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Byte}!leaf-i2c.c@{leaf-\/i2c.\-c}}
+\subsubsection[{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Byte}]{\setlength{\rightskip}{0pt plus 5cm}int16\-\_\-t Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Byte (
+\begin{DoxyParamCaption}
+\item[{struct {\bf Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$}]{bus, }
+\item[{uint8\-\_\-t}]{data, }
+\item[{uint8\-\_\-t}]{address}
+\end{DoxyParamCaption}
+)}}\label{leaf-i2c_8c_a097ffc31e1b77c7630568f28e6121a0f}
+\hypertarget{leaf-i2c_8c_a7c3cf399b26fb2d1545e8891a751ba32}{\index{leaf-\/i2c.\-c@{leaf-\/i2c.\-c}!Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Packet@{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Packet}}
+\index{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Packet@{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Packet}!leaf-i2c.c@{leaf-\/i2c.\-c}}
+\subsubsection[{Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Packet}]{\setlength{\rightskip}{0pt plus 5cm}int16\-\_\-t Leaf\-\_\-\-I2\-C\-\_\-\-Write\-Packet (
+\begin{DoxyParamCaption}
+\item[{struct {\bf Leaf\-\_\-\-I2\-C\-\_\-\-Bus} $\ast$}]{bus, }
+\item[{struct {\bf Leaf\-\_\-\-I2\-C\-\_\-\-Packet} $\ast$}]{p}
+\end{DoxyParamCaption}
+)}}\label{leaf-i2c_8c_a7c3cf399b26fb2d1545e8891a751ba32}

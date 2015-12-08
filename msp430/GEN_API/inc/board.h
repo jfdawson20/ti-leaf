@@ -1,0 +1,10 @@
+#ifndef BOARD_H
+#define BOARD_H
+
+
+#define I2C_BASE __MSP430_BASEADDRESS_USCI_B0__
+#define I2C_CLK USCI_B_I2C_CLOCKSOURCE_SMCLK
+#define I2C_CLK_SPEED UCS_getSMCLK()
+
+
+#endif 
