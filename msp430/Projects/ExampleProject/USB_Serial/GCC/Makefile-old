@@ -2,22 +2,19 @@
 #General Project Settings 
 NAME		= example#		# Project name
 CPU             = msp430f5510#		# msp430 part number, used by the compiler. 
-REPOTIP         = ../../../..#	# Tip of repo, points to ti-leaf directory
+REPOTIP         = ../../../../..#	# Tip of repo, points to ti-leaf directory
 
 #Project Includes 
 CINC	 = /usr/ti/msp430/include#			# msp430-elf-gcc compiler libaries and stuff  
 PINC     = ../inc#					# project include files 
-DINC     = ${REPOTIP}/API/driverLib#			# MSP430 API Library Includes 
-DEVP     = ${REPOTIP}/Devices#  	                # Device Drivers 
-DEVI     = ${REPOTIP}/Devices/inc#
-GENP     = ${REPOTIP}/GEN_API#				# Generic API
-GENI     = ${REPOTIP}/GEN_API/inc#
-AINC     = ${REPOTIP}/API/#				# MSP430 API Tip
-AUINC    = ${REPOTIP}/API/USB_API#	       		# MSP430f5xx/6xx USB API
-AUCINC   = ${REPOTIP}/API/USB_API/USB_Common#   	# 
-UCINC    = ../USB#					# Project Specific USB Includes 
+DINC     = ${REPOTIP}/msp430/API/driverLib#		# MSP430 API Library Includes 
+DEVP     = ${REPOTIP}/msp430/Devices#                   # Device Drivers 
+AINC     = ${REPOTIP}/msp430/API/#			# MSP430 API Tip
+AUINC    = ${REPOTIP}/msp430/API/USB_API#	       	# MSP430f5xx/6xx USB API
+AUCINC   = ${REPOTIP}/msp430/API/USB_API/USB_Common#   	# 
+UCINC    = ../USB#				# Project Specific USB Includes 
 UAINC    = ../USB/USB_app/#
-INCLUDES = -iquote${DEVI} -iquote${GENI} -iquote${UAINC} -iquote${UCINC} -iquote${CINC} -iquote${PINC} -iquote${DINC} -iquote${AINC} -iquote${AUINC} -I${AUCINC} -I${CINC} -I${PINC} -I${DINC} -I${AINC} -I${AUINC} -I${DEVI} -I${GENI}
+INCLUDES = -iquote${UAINC} -iquote${UCINC} -iquote${CINC} -iquote${PINC} -iquote${DINC} -iquote${AINC} -iquote${AUINC} -I${AUCINC} -I${CINC} -I${PINC} -I${DINC} -I${AINC} -I${AUINC} 
 
 #Output Directories, where the objects and output binarys go
 BIN             = ../bin#
@@ -42,13 +39,11 @@ LD 		+= -T ../../../../API/USB_API/msp430USB.ld# MSP430F5xx/6xx USB API addition
 #Static Library locations, names, etc 
 LIBAPI 		= ../../../../API/driverLib/lib/ti-leaf-api.a
 USBAPI 		= ../USB/lib/ti-leaf-usb-api.a
-DEVAPI          = ${DEVP}/lib/device-api.a
-GENAPI          = ${GENP}/lib/generic-api.a
+DEVAPI          = ${DEVP}/device-api.a
 LIBPATH         = -L../../../../API/driverLib/lib/
 LIBPATH         += -L../USB/lib/
 LIBPATH         += -L../../../../API/USB_API/lib/
-LIBPATH         += -L${DEVP}/lib
-LIBPATH         += -L${GENP}/lib
+LIBPATH         += -L${DEVP}/
 LIBPATH         += -L/usr/ti/msp430/
 
 #MSP430 USB BSL programmer and programmer command 
@@ -68,7 +63,7 @@ H2T    	= ../../../../../host/tools/hex2txt/hex2txt.bin#				# Hex2Txt utility (U
 
 
 #all should be the first target. it's built when make is run without args
-all: ${BIN} ${OBJ} ${LIBAPI} ${USBAPI} ${GENAPI} ${DEVAPI} ${BIN}/${NAME}.elf ${BIN}/$(NAME).hex ${BIN}/$(NAME).txt ${BIN}/$(NAME).lst 
+all: ${BIN} ${OBJ} ${LIBAPI} ${USBAPI} ${DEVAPI} ${BIN}/${NAME}.elf ${BIN}/$(NAME).hex ${BIN}/$(NAME).txt ${BIN}/$(NAME).lst 
 
 #Download target. running "make download" will perform a full compile and attempt to download the image onto 
 #the ti-leaf board. for this to work the board must be installed in a USB port on the system and put into bootloader mode
@@ -77,7 +72,7 @@ download: ${BIN}/${NAME}.txt
 
 # .elf target: compiles project and produces an output binary in msp430-elf format 
 ${BIN}/${NAME}.elf: ${PROJOBJ} ${USBAPPOBJ} ${USBCFGOBJ}
-	$(CC) ${LOPS} ${LD} ${INC} ${LIBPATH} -lti-leaf-usb-api -lti-leaf-api -lti-leaf-usb-api -lgeneric-api -ldevice-api -lti-leaf-api ${PROJOBJ} ${USBAPPOBJ} ${USBCFGOBJ} -lti-leaf-usb-api -lti-leaf-api -lti-leaf-usb-api -lti-leaf-api -lgeneric-api -ldevice-api -lti-leaf-api -o ../bin/${NAME}.elf
+	$(CC) ${LOPS} ${LD} ${INC} ${LIBPATH} -lti-leaf-usb-api -lti-leaf-api -lti-leaf-usb-api -lti-leaf-api ${PROJOBJ} ${USBAPPOBJ} ${USBCFGOBJ} -lti-leaf-usb-api -lti-leaf-api -lti-leaf-usb-api -lti-leaf-api -o ../bin/${NAME}.elf
 
 # .hex target: converts .elf binary to an intel hex .hex binary. 
 ${BIN}/${NAME}.hex: ${BIN}/${NAME}.elf
@@ -96,7 +91,6 @@ clean:
 	make clean -C ../../../../API/driverLib
 	make clean -C ../USB/
 	make clean -C ${DEVP}
-	make clean -C ${GENP}
 	rm -f ${AUINC}/USR_USB
 	rm -f ../obj/*.o
 	rm -f ../obj/*.d
@@ -134,9 +128,6 @@ ${USBAPI}:
 ${DEVAPI}:
 	echo "devices ---------------------------saa-a-a-a-a-a-a-a-a-"
 	make -C ${DEVP}/
-
-${GENAPI}:
-	make -C ${GENP}/
 
 #Project Target: Build project specific files 
 ../obj/%.o: ../src/%.c

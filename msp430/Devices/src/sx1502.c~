@@ -8,8 +8,8 @@ struct Leaf_I2C_Device sx1502_init(struct Leaf_I2C_Bus *bus, uint8_t address)
 	
 	//create device struct 
 	struct Leaf_I2C_Device dev;
-	dev.DeviceID = Leaf_I2C_GenerateDevId(bus);
-	dev.Address  = address;
+	dev.DeviceId = Leaf_I2C_GenerateDevId(b);
+	dev.Address  = 	address;
 	dev.bus      = bus;
 
 	//return device struct 
@@ -19,7 +19,7 @@ struct Leaf_I2C_Device sx1502_init(struct Leaf_I2C_Bus *bus, uint8_t address)
 int16_t sx1502_ReadGPIO(struct Leaf_I2C_Device *dev, uint8_t *data)
 {	
 	int16_t ret = 0;
-	ret = Leaf_I2C_RegRead(dev->bus, data, dev->Address, SX_REGDATA);
+	ret = Leaf_I2C_RegRead(dev->bus, data, dev->Addressi, SX_REGDATA);
 	return ret;
 }
 
@@ -33,7 +33,7 @@ int16_t sx1502_WriteGPIO(struct Leaf_I2C_Device *dev, uint8_t value, uint8_t mas
 int16_t sx1502_GetGPIODirection(struct Leaf_I2C_Device *dev, uint8_t *data)
 {	
 	int16_t ret = 0;
-	ret = Leaf_I2C_RegRead(dev->bus, data, dev->Address, SX_REGDIR);
+	ret = Leaf_I2C_RegRead(dev->bus, data, dev->Addressi, SX_REGDIR);
 	return ret;
 }
 
@@ -47,7 +47,7 @@ int16_t sx1502_SetGPIODirection(struct Leaf_I2C_Device *dev, uint8_t setting, ui
 int16_t sx1502_GetIntMask(struct Leaf_I2C_Device *dev, uint8_t *data)
 {	
 	int16_t ret = 0;
-	ret = Leaf_I2C_RegRead(dev->bus, data, dev->Address, SX_REGDIR);
+	ret = Leaf_I2C_RegRead(dev->bus, data, dev->Addressi, SX_REGDIR);
 	return ret;
 }
 
@@ -116,16 +116,16 @@ int16_t sx1502_SetPLDTable(struct Leaf_I2C_Device *dev, uint8_t tableID, uint8_t
 
 	int16_t ret = 0;
 	if(tableID == 0)
-		ret = Leaf_I2C_RegWrite(dev->bus, table, dev->Address, SX_REGPLDTABLE0);
+		ret = Leaf_I2C_RegWrite(dev->bus, table, dev->Address, SX_REGTABLE0);
 		
-	else if(tableID == 1)
-		ret = Leaf_I2C_RegWrite(dev->bus, table, dev->Address, SX_REGPLDTABLE1);
+	else if(tableID == 1):
+		ret = Leaf_I2C_RegWrite(dev->bus, table, dev->Address, SX_REGTABLE1);
 
-	else if(tableID == 2)
-		ret = Leaf_I2C_RegWrite(dev->bus, table, dev->Address, SX_REGPLDTABLE2);
+	else if(tableID == 2):
+		ret = Leaf_I2C_RegWrite(dev->bus, table, dev->Address, SX_REGTABLE2);
 
-	else if(tableID == 3)
-		ret = Leaf_I2C_RegWrite(dev->bus, table, dev->Address, SX_REGPLDTABLE3);	
+	else if(tableID == 3):
+		ret = Leaf_I2C_RegWrite(dev->bus, table, dev->Address, SX_REGTABLE3);	
 	else
 		return -1;	
 
@@ -137,16 +137,16 @@ int16_t sx1502_GetPLDTable(struct Leaf_I2C_Device *dev, uint8_t tableID, uint8_t
 
 	int16_t ret = 0;
 	if(tableID == 0)
-		ret = Leaf_I2C_RegRead(dev->bus, table, dev->Address, SX_REGPLDTABLE0);
+		ret = Leaf_I2C_RegRead(dev->bus, table, dev->Address, SX_REGTABLE0);
 		
-	else if(tableID == 1)
-		ret = Leaf_I2C_RegRead(dev->bus, table, dev->Address, SX_REGPLDTABLE1);
+	else if(tableID == 1):
+		ret = Leaf_I2C_RegRead(dev->bus, table, dev->Address, SX_REGTABLE1);
 
-	else if(tableID == 2)
-		ret = Leaf_I2C_RegRead(dev->bus, table, dev->Address, SX_REGPLDTABLE2);
+	else if(tableID == 2):
+		ret = Leaf_I2C_RegRead(dev->bus, table, dev->Address, SX_REGTABLE2);
 
-	else if(tableID == 3)
-		ret = Leaf_I2C_RegRead(dev->bus, table, dev->Address, SX_REGPLDTABLE3);	
+	else if(tableID == 3):
+		ret = Leaf_I2C_RegRead(dev->bus, table, dev->Address, SX_REGTABLE3);	
 	else
 		return -1;	
 

@@ -2,7 +2,7 @@
 NAME            = device-api
 CPU             = msp430f5510
 LIB             = lib
-INC             = -iquote. -iquote../driverLib -iquoteinc/ -I../driverLib -Iinc -I/usr/ti/msp430/include
+INC             = -iquote. -iquote../API/driverLib -iquoteinc/ -I../API/driverLib -I../GEN_API/inc -Iinc -I/usr/ti/msp430/include
 OBJDIR          = src/obj
 SRCS            = $(wildcard src/*.c) 
 OBJS            = $(SRCS:src/%.c=src/obj/%.o)

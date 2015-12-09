@@ -162,7 +162,7 @@ int16_t Leaf_I2C_ReadByte(struct Leaf_I2C_Bus *bus, uint8_t *data, uint8_t addre
 
 //*****************************************************************************
 //
-//! \brief Read single register from I2C Devic
+//! \brief Reads a single byte 'data' from slave device at 'address'
 //!
 //! This function accepts reads a single byte from device at 'address'
 //! 
@@ -170,7 +170,6 @@ int16_t Leaf_I2C_ReadByte(struct Leaf_I2C_Bus *bus, uint8_t *data, uint8_t addre
 //! \param bus, Pointer to I2C Bus structure used with all Leaf I2C API Functions
 //! \param *data, buffer to hold recieved byte
 //! \param address, Target slave address
-//! \device register offset 
 //!
 //!
 //! \return 0 on success
@@ -180,21 +179,20 @@ int16_t Leaf_I2C_RegRead(struct Leaf_I2C_Bus *bus, uint8_t *data, uint8_t addres
 
 //*****************************************************************************
 //
-//! \brief Write single register from I2C Devic
+//! \brief Reads a single byte 'data' from slave device at 'address'
 //!
-//! This function writes a single byte to a register offset in device at 'address'
+//! This function accepts reads a single byte from device at 'address'
 //! 
 //!
 //! \param bus, Pointer to I2C Bus structure used with all Leaf I2C API Functions
 //! \param *data, buffer to hold recieved byte
 //! \param address, Target slave address
-//! \device register offset 
 //!
 //!
 //! \return 0 on success
 //
 //*****************************************************************************
-int16_t Leaf_I2C_RegWrite(struct Leaf_I2C_Bus *bus, uint8_t data, uint8_t address, uint8_t reg);
+int16_t Leaf_I2C_RegWrite(struct Leaf_I2C_Bus *bus, uint8_t *data, uint8_t address, reg);
 
 //*****************************************************************************
 //
